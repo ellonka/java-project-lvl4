@@ -5,7 +5,7 @@ import io.javalin.Javalin;
 public class App {
     public static void main(String[] args) {
         Javalin app = getApp();
-        app.start(8080);
+        app.start(getPort());
     }
 
     public static Javalin getApp() {
@@ -22,5 +22,10 @@ public class App {
 
     private static void addRoutes(Javalin app) {
         app.get("/", ctx -> ctx.result("Hello world"));
+    }
+
+    private static int getPort() {
+        String port = System.getenv().getOrDefault("PORT", "8080");
+        return Integer.valueOf(port);
     }
 }
