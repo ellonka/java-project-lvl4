@@ -19,6 +19,10 @@ repositories {
     mavenCentral()
 }
 
+application {
+    mainClass = 'hexlet.code.App'
+}
+
 compileJava {
     options.release = 17
 }
@@ -28,6 +32,8 @@ jacoco {
 }
 
 dependencies {
+    implementation 'io.javalin:javalin:4.6.4'
+    implementation 'org.slf4j:slf4j-simple:1.7.31'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
