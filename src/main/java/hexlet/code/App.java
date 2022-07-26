@@ -6,8 +6,6 @@ import io.javalin.Javalin;
 
 public final class App {
     public static void main(String[] args) {
-        Url url = new Url("http://sos.ru");
-        url.save();
         Javalin app = getApp();
         app.start(getPort());
     }
