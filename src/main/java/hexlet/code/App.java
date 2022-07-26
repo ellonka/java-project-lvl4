@@ -1,7 +1,5 @@
 package hexlet.code;
 
-import hexlet.code.domain.Url;
-import io.ebean.DB;
 import io.javalin.Javalin;
 
 public final class App {
