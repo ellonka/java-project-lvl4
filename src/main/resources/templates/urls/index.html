@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Анализатор страниц</title>
+    <link rel='stylesheet' href='/webjars/bootstrap/5.1.1/css/bootstrap.min.css'>
+    <script src="/webjars/bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Анализатор страниц</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Главная</a>
+                <a class="nav-link" href="/urls">Сайты</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="flex-grow-1">
+<section layout:fragment="content">
+    <div class="container-lg mt-5">
+    <h1>Сайты</h1>
+    <table class="table table-bordered table-hover mt-3">
+        <thead>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Последняя проверка</th>
+        <th>Код ответа</th>
+        </thead>
+        <tbody>
+        <tr th:each="url : ${urls}" th:object="${url}">
+            <td th:text="*{getId()}"></td>
+            <td>
+                <a th:text="*{getName()}" th:href="@{/urls/{id}(id=*{getId()})}"></a>
+            </td>
+            <td th:text="*{#temporals.format(getCreatedAt(), 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="*{getId()}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="container">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/articles(page=(${page < 2}) ? 1 : (${page - 1}))}">Prev</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/articles(page=${page + 1})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </div>
+</section>
+</main>
+
+<footer class="footer border-top py-3 mt-5 bg-light">
+    <div class="container-xl">
+        <div class="text-center">
+            created by
+            <a href="https://github.com/ellonka" target="_blank">Ella</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

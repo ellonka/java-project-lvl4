@@ -1,6 +1,10 @@
 datasource:
-  # Задаём базу данных, к которой будет происходить подключение
-  db:
+  default: ${APP_ENV}
+  development:
+    username: ""
+    password: ""
+    url: jdbc:h2:./ellas
+  production:
     username: "${JDBC_DATABASE_USERNAME}"
     password: "${JDBC_DATABASE_PASSWORD}"
     url: "${JDBC_DATABASE_URL}"

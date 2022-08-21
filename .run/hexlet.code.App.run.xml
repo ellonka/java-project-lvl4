@@ -1,0 +1,20 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="hexlet.code.App" type="Application" factoryName="Application" nameIsGenerated="true">
+    <envs>
+      <env name="JDBC_DATABASE_USERNAME" value="" />
+      <env name="JDBC_DATABASE_PASSWORD" value="" />
+      <env name="JDBC_DATABASE_URL" value="jdbc:h2:./ellas" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="hexlet.code.App" />
+    <module name="app.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="hexlet.code.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
