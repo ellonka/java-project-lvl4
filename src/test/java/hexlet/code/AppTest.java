@@ -19,8 +19,8 @@ public final class AppTest {
     private static Javalin app;
     private static String baseUrl;
     private static Transaction transaction;
-    private final int CODE_200 = 200;
-    private final int CODE_302 = 302;
+    private final int CODE200 = 200;
+    private final int CODE302 = 302;
 
     @BeforeAll
     public static void startApp() {
@@ -48,7 +48,7 @@ public final class AppTest {
     @Test
     void testRoot() {
         HttpResponse<String> response = Unirest.get(baseUrl).asString();
-        assertThat(response.getStatus()).isEqualTo(CODE_200);
+        assertThat(response.getStatus()).isEqualTo(CODE200);
     }
 
     @Test
@@ -58,7 +58,7 @@ public final class AppTest {
                 .post(baseUrl + "/urls")
                 .field("url", urlForCheck)
                 .asString();
-        assertThat(response.getStatus()).isEqualTo(CODE_302);
+        assertThat(response.getStatus()).isEqualTo(CODE302);
 
         Url addedUrl = new QUrl()
                 .name.equalTo("https://frontbackend.com")
@@ -83,7 +83,7 @@ public final class AppTest {
                 .field("url", wrongUrl)
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(CODE_302);
+        assertThat(response.getStatus()).isEqualTo(CODE302);
         boolean hasWrongUrl = new QUrl()
                 .name.equalTo(wrongUrl)
                 .exists();
@@ -107,7 +107,7 @@ public final class AppTest {
                 .post(baseUrl + "/urls")
                 .field("url", urlForCheck)
                 .asString();
-        assertThat(response2.getStatus()).isEqualTo(CODE_302);
+        assertThat(response2.getStatus()).isEqualTo(CODE302);
 
         HttpResponse<String> responseUrls = Unirest
                 .get(baseUrl + "/urls")
