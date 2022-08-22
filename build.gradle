@@ -52,6 +52,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'io.ebean:ebean-test:12.11.5'
+    testImplementation 'com.konghq:unirest-java:3.13.0'
 }
 
 test {

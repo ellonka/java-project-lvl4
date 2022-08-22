@@ -9,7 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class UrlsController {
+public final class UrlsController {
+    private static final int ROWS_PER_PAGE = 10;
     public static Handler showUrl = ctx -> {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
         Url url = new QUrl()
@@ -26,6 +27,7 @@ public class UrlsController {
             domain = extractDomain(input);
         } catch (MalformedURLException e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
+            ctx.sessionAttribute("flash-type", "danger");
             ctx.redirect("/");
             e.printStackTrace();
             return;
@@ -35,25 +37,26 @@ public class UrlsController {
                 .name.equalTo(domain)
                 .exists();
         if (hasUrl) {
-            ctx.sessionAttribute("flash", "Страница уже существует");
             ctx.redirect("/urls");
+            ctx.sessionAttribute("flash", "Страница уже существует");
+            ctx.sessionAttribute("flash-type", "info");
             return;
         }
 
         Url url = new Url(domain);
         url.save();
-        ctx.sessionAttribute("flash", "Страница успешно добавлена");
         ctx.redirect("/urls");
+        ctx.sessionAttribute("flash", "Страница успешно добавлена");
+        ctx.sessionAttribute("flash-type", "success");
     };
 
     public static Handler listUrls = ctx -> {
         int page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
-        int rowsPerPage = 10;
-        int offset = (page - 1) * rowsPerPage;
+        int offset = (page - 1) * ROWS_PER_PAGE;
 
         PagedList<Url> pagedUrls = new QUrl()
                 .setFirstRow(offset)
-                .setMaxRows(rowsPerPage)
+                .setMaxRows(ROWS_PER_PAGE)
                 .orderBy()
                 .createdAt.desc()
                 .findPagedList();
