@@ -7,14 +7,20 @@ import io.ebean.Transaction;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AppTest {
+public final class AppTest {
     private static Javalin app;
     private static String baseUrl;
     private static Transaction transaction;
+    private final int CODE_200 = 200;
+    private final int CODE_302 = 302;
 
     @BeforeAll
     public static void startApp() {
@@ -42,7 +48,7 @@ public class AppTest {
     @Test
     void testRoot() {
         HttpResponse<String> response = Unirest.get(baseUrl).asString();
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(CODE_200);
     }
 
     @Test
@@ -52,7 +58,7 @@ public class AppTest {
                 .post(baseUrl + "/urls")
                 .field("url", urlForCheck)
                 .asString();
-        assertThat(response.getStatus()).isEqualTo(302);
+        assertThat(response.getStatus()).isEqualTo(CODE_302);
 
         Url addedUrl = new QUrl()
                 .name.equalTo("https://frontbackend.com")
@@ -77,13 +83,13 @@ public class AppTest {
                 .field("url", wrongUrl)
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(302);
+        assertThat(response.getStatus()).isEqualTo(CODE_302);
         boolean hasWrongUrl = new QUrl()
                 .name.equalTo(wrongUrl)
                 .exists();
         assertThat(hasWrongUrl).isFalse();
 
-        HttpResponse<String> responseGet= Unirest
+        HttpResponse<String> responseGet = Unirest
                 .get(baseUrl).asString();
         String content = responseGet.getBody();
         assertThat(content).contains("Некорректный URL");
@@ -101,7 +107,7 @@ public class AppTest {
                 .post(baseUrl + "/urls")
                 .field("url", urlForCheck)
                 .asString();
-        assertThat(response2.getStatus()).isEqualTo(302);
+        assertThat(response2.getStatus()).isEqualTo(CODE_302);
 
         HttpResponse<String> responseUrls = Unirest
                 .get(baseUrl + "/urls")
