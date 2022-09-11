@@ -51,8 +51,12 @@
             <td>
                 <a th:text="*{getName()}" th:href="@{/urls/{id}(id=*{getId()})}"></a>
             </td>
-            <td th:text="*{#temporals.format(getCreatedAt(), 'dd-MM-yyyy HH:mm')}"></td>
-            <td th:text="*{getId()}"></td>
+            <td th:text="*{!getUrlChecks().empty}
+                ? *{#temporals.format(getUrlChecks().get(urlChecks.size - 1).getCreatedAt(), 'dd-MM-yyyy HH:mm')}
+                : ''"></td>
+            <td th:text="*{!getUrlChecks().empty}
+                ? *{getUrlChecks().get(urlChecks.size - 1).getStatusCode()}
+                : ''"></td>
         </tr>
         </tbody>
     </table>

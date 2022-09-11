@@ -26,33 +26,35 @@ public final class UrlsController {
         Url url = new QUrl()
                 .id.equalTo(id)
                 .findOne();
+        try {
+            HttpResponse<String> response = Unirest.get(url.getName()).asString();
+            int status = response.getStatus();
+            if (status == CODE_200) {
+                Document document = Jsoup.parse(response.getBody());
+                String h1 = document.selectFirst("h1") != null
+                        ? document.selectFirst("h1").text()
+                        : "";
+                String title = document.title();
+                String description = document.selectFirst("meta[name=description]") != null
+                        ? document.selectFirst("meta[name=description]").attr("content")
+                        : "";
 
-        HttpResponse<String> response = Unirest.get(url.getName()).asString();
-        int status = response.getStatus();
-        if (status == CODE_200) {
-            Document document = Jsoup.parse(response.getBody());
-            String h1 = document.selectFirst("h1") != null
-                    ? document.selectFirst("h1").text()
-                    : "";
-            String title = document.title();
-            String description = document.selectFirst("meta[name=description]") != null
-                    ? document.selectFirst("meta[name=description]").attr("content")
-                    : "";
-
-            UrlCheck urlCheck = new UrlCheck(status, title, h1, description, url);
-            urlCheck.save();
-            ctx.sessionAttribute("flash", "Страница успешно проверена");
-            ctx.sessionAttribute("flash-type", "success");
-        } else if (status == CODE_404) {
-            UrlCheck urlCheck = new UrlCheck(CODE_404, "", "", "", url);
-            urlCheck.save();
-            ctx.sessionAttribute("flash", "404, Not Found");
-            ctx.sessionAttribute("flash-type", "info");
-        } else {
-            ctx.sessionAttribute("flash", response.getBody());
+                UrlCheck urlCheck = new UrlCheck(status, title, h1, description, url);
+                urlCheck.save();
+                ctx.sessionAttribute("flash", "Страница успешно проверена");
+                ctx.sessionAttribute("flash-type", "success");
+            } else if (status == CODE_404) {
+                UrlCheck urlCheck = new UrlCheck(CODE_404, "", "", "", url);
+                urlCheck.save();
+                ctx.sessionAttribute("flash", "404, Not Found");
+                ctx.sessionAttribute("flash-type", "info");
+            }
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", e.getMessage());
             ctx.sessionAttribute("flash-type", "danger");
+        } finally {
+            ctx.redirect("/urls/" + id);
         }
-        ctx.redirect("/urls/" + id);
     };
     public static Handler showUrl = ctx -> {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
