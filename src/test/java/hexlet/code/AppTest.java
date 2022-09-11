@@ -29,7 +29,7 @@ public final class AppTest {
     private static Javalin app;
     private static String baseUrl;
     private static Transaction transaction;
-    private final static int CODE_200 = 200;
+    private static final int CODE_200 = 200;
     private final int code302 = 302;
     private static MockWebServer server;
 
