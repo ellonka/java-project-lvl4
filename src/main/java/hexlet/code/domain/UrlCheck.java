@@ -23,14 +23,14 @@ public final class UrlCheck extends Model {
     @WhenCreated
     private Instant createdAt;
 
-    public UrlCheck() {}
+    public UrlCheck() { }
 
-    public UrlCheck(int statusCode, String title, String h1, String description, Url url) {
-        this.statusCode = statusCode;
-        this.title = title;
-        this.h1 = h1;
-        this.description = description;
-        this.url = url;
+    public UrlCheck(int status, String pageTitle, String heading1, String metaDescription, Url urlObj) {
+        this.statusCode = status;
+        this.title = pageTitle;
+        this.h1 = heading1;
+        this.description = metaDescription;
+        this.url = urlObj;
     }
 
     public long getId() {

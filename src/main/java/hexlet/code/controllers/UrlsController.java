@@ -44,7 +44,7 @@ public final class UrlsController {
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
         } else if (status == CODE_404) {
-            UrlCheck urlCheck = new UrlCheck(404, "","", "", url);
+            UrlCheck urlCheck = new UrlCheck(CODE_404, "", "", "", url);
             urlCheck.save();
             ctx.sessionAttribute("flash", "404, Not Found");
             ctx.sessionAttribute("flash-type", "info");
