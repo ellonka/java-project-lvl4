@@ -82,7 +82,7 @@ public final class AppTest {
         assertThat(response.getStatus()).isEqualTo(code302);
 
         Url addedUrl = new QUrl()
-                .name.equalTo("https://frontbackend.com/")
+                .name.equalTo("https://frontbackend.com")
                 .findOne();
 
         assertThat(addedUrl).isNotNull();
@@ -142,7 +142,6 @@ public final class AppTest {
     void testUrlCheck() throws MalformedURLException {
         String checkingUrl = server.url("/").toString();
 
-        System.out.println(checkingUrl);
         Unirest.post(baseUrl + "/urls")
                 .field("url", checkingUrl)
                 .asString();
