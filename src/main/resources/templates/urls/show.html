@@ -26,6 +26,14 @@
     </div>
 </nav>
 <main class="flex-grow-1">
+    <div
+            th:if="${session.flash}"
+            th:class="'rounded-0 m-0 alert alert-dismissible fade show alert-' + ${ctx.consumeSessionAttribute('flash-type')}"
+            role="alert"
+    >
+        <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <section layout:fragment="content">
     <div class="container-lg mt-5" th:object="${url}">
         <h1 th:text="'Сайт ' + *{name}"></h1>
@@ -45,6 +53,36 @@
         </tr>
         </tbody>
     </table>
+    <br><br>
+
+    <h2>Проверки</h2>
+    <form method="post" action="show.html" th:action="@{/urls/{id}/checks(id=*{id})}">
+        <button type="submit" class="btn btn-primary">Запустить проверку</button>
+    </form>
+    </div>
+    <div class="container-lg mt-5">
+        <table class="table table-bordered table-hover mt-3">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Код ответа</th>
+                <th>title</th>
+                <th>h1</th>
+                <th>description</th>
+                <th>Дата проверки</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="check : ${checks}" th:object="${check}">
+                <td th:text="*{id}"></td>
+                <td th:text="*{statusCode}"></td>
+                <td th:text="*{title}"></td>
+                <td th:text="*{h1}"></td>
+                <td th:text="*{description}"></td>
+                <td th:text="*{#temporals.format(createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     </section>
 </main>
