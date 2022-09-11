@@ -29,7 +29,7 @@ public final class AppTest {
     private static Javalin app;
     private static String baseUrl;
     private static Transaction transaction;
-    private final static int code200 = 200;
+    private final static int CODE_200 = 200;
     private final int code302 = 302;
     private static MockWebServer server;
 
@@ -43,7 +43,7 @@ public final class AppTest {
         server = new MockWebServer();
 
         MockResponse mockResponse = new MockResponse();
-        mockResponse.setResponseCode(code200);
+        mockResponse.setResponseCode(CODE_200);
         mockResponse.setBody(Files.readString(new File("src/test/resources/testPage.html").toPath()));
 
         server.enqueue(mockResponse);
@@ -69,7 +69,7 @@ public final class AppTest {
     @Test
     void testRoot() {
         HttpResponse<String> response = Unirest.get(baseUrl).asString();
-        assertThat(response.getStatus()).isEqualTo(code200);
+        assertThat(response.getStatus()).isEqualTo(CODE_200);
     }
 
     @Test
@@ -162,7 +162,7 @@ public final class AppTest {
         List<UrlCheck> addedUrlCheck = new QUrlCheck()
                 .url.equalTo(addedUrl).findList();
 
-        assertThat(addedUrlCheck.get(0).getStatusCode()).isEqualTo(code200);
+        assertThat(addedUrlCheck.get(0).getStatusCode()).isEqualTo(CODE_200);
         assertThat(response.getBody()).contains("200");
         assertThat(addedUrlCheck.get(0).getTitle()).isEqualTo("HTML Page for Testing CSS");
         assertThat(response.getBody()).contains("HTML Page for Testing CSS");
