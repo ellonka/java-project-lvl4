@@ -8,7 +8,7 @@ bin/
 .settings
 .classpath
 *.class
-.idea
-.run
 .vscode/
 .DS_store
+/.idea/
+/.run/
