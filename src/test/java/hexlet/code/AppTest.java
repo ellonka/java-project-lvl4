@@ -8,6 +8,7 @@ import io.ebean.DB;
 import io.ebean.Transaction;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
+import kong.unirest.HttpStatus;
 import kong.unirest.Unirest;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -29,8 +30,6 @@ public final class AppTest {
     private static Javalin app;
     private static String baseUrl;
     private static Transaction transaction;
-    private static final int CODE_200 = 200;
-    private final int code302 = 302;
     private static MockWebServer server;
 
     @BeforeAll
@@ -43,7 +42,7 @@ public final class AppTest {
         server = new MockWebServer();
 
         MockResponse mockResponse = new MockResponse();
-        mockResponse.setResponseCode(CODE_200);
+        mockResponse.setResponseCode(HttpStatus.OK);
         mockResponse.setBody(Files.readString(new File("src/test/resources/testPage.html").toPath()));
 
         server.enqueue(mockResponse);
@@ -69,7 +68,7 @@ public final class AppTest {
     @Test
     void testRoot() {
         HttpResponse<String> response = Unirest.get(baseUrl).asString();
-        assertThat(response.getStatus()).isEqualTo(CODE_200);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -79,7 +78,7 @@ public final class AppTest {
                 .post(baseUrl + "/urls")
                 .field("url", urlForCheck)
                 .asString();
-        assertThat(response.getStatus()).isEqualTo(code302);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
 
         Url addedUrl = new QUrl()
                 .name.equalTo("https://frontbackend.com")
@@ -104,7 +103,7 @@ public final class AppTest {
                 .field("url", wrongUrl)
                 .asString();
 
-        assertThat(response.getStatus()).isEqualTo(code302);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.FOUND);
         boolean hasWrongUrl = new QUrl()
                 .name.equalTo(wrongUrl)
                 .exists();
@@ -128,7 +127,7 @@ public final class AppTest {
                 .post(baseUrl + "/urls")
                 .field("url", urlForCheck)
                 .asString();
-        assertThat(response2.getStatus()).isEqualTo(code302);
+        assertThat(response2.getStatus()).isEqualTo(HttpStatus.FOUND);
 
         HttpResponse<String> responseUrls = Unirest
                 .get(baseUrl + "/urls")
@@ -161,7 +160,7 @@ public final class AppTest {
         List<UrlCheck> addedUrlCheck = new QUrlCheck()
                 .url.equalTo(addedUrl).findList();
 
-        assertThat(addedUrlCheck.get(0).getStatusCode()).isEqualTo(CODE_200);
+        assertThat(addedUrlCheck.get(0).getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).contains("200");
         assertThat(addedUrlCheck.get(0).getTitle()).isEqualTo("HTML Page for Testing CSS");
         assertThat(response.getBody()).contains("HTML Page for Testing CSS");

@@ -17,8 +17,6 @@ import org.jsoup.nodes.Document;
 
 public final class UrlsController {
     private static final int ROWS_PER_PAGE = 10;
-    private static final int CODE_200 = 200;
-    private static final int CODE_404 = 404;
 
     public static Handler checkUrl = ctx -> {
         long id = ctx.pathParamAsClass("id", Long.class).getOrDefault(null);
@@ -29,7 +27,7 @@ public final class UrlsController {
         try {
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
             int status = response.getStatus();
-            if (status == CODE_200) {
+            if (Utils.isStatusPositive(status)) {
                 Document document = Jsoup.parse(response.getBody());
                 String h1 = document.selectFirst("h1") != null
                         ? document.selectFirst("h1").text()
@@ -43,14 +41,14 @@ public final class UrlsController {
                 urlCheck.save();
                 ctx.sessionAttribute("flash", "Страница успешно проверена");
                 ctx.sessionAttribute("flash-type", "success");
-            } else if (status == CODE_404) {
-                UrlCheck urlCheck = new UrlCheck(CODE_404, "", "", "", url);
+            } else {
+                UrlCheck urlCheck = new UrlCheck(status, "", "", "", url);
                 urlCheck.save();
-                ctx.sessionAttribute("flash", "404, Not Found");
+                ctx.sessionAttribute("flash", "Страница проверена, информации не найдено");
                 ctx.sessionAttribute("flash-type", "info");
             }
         } catch (Exception e) {
-            ctx.sessionAttribute("flash", e.getMessage());
+            ctx.sessionAttribute("flash", "Что-то пошло не так");
             ctx.sessionAttribute("flash-type", "danger");
         } finally {
             ctx.redirect("/urls/" + id);
@@ -62,7 +60,9 @@ public final class UrlsController {
                 .id.equalTo(id)
                 .findOne();
         List<UrlCheck> urlChecks = new QUrlCheck()
-                .url.equalTo(url).findList();
+                .url.equalTo(url)
+                .orderBy().createdAt.desc()
+                .findList();
 
         ctx.attribute("checks", urlChecks);
         ctx.attribute("url", url);
